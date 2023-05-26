@@ -1,0 +1,33 @@
+.rbc-event{
+    background-color: #DBDFEA;
+    border: 1px solid #8294C4;
+    color: #343A40;
+}
+
+.rbc-current-time-indicator{
+    background-color: #8294C4;
+}
+
+.rbc-toolbar{
+    color: #343A40;
+    font-weight: 700;
+    border-radius: 5px;
+}
+
+.rbc-btn-group button{
+    color: #343A40;
+    font-weight: 500;
+}
+
+.rbc-calendar{
+    border-radius: 5px;
+}
+
+.rbc-event.rbc-selected{
+    background-color: #8294C4;
+    color: #fff;
+}
+
+.rbc-show-more{
+    color: #343A40;
+}
