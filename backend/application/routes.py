@@ -1,11 +1,8 @@
 from application import app
-from flask import render_template, flash, request, redirect, url_for, jsonify
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from .form import TareaForm, RegisterForm, LoginForm
+from flask import request, redirect, jsonify
 from datetime import datetime, date
 from application import db
 from bson import ObjectId
-from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
         
 # Inicializar Bcrypt
