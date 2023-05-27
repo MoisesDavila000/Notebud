@@ -45,14 +45,12 @@ export const Form = () => {
         updateForm();
       }
     }
-    console.log(update_id, pet);
   },[location, pet, update_id]);
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
     var recordatorio = check.toString();
     recordatorio = recordatorio.charAt(0).toUpperCase() + recordatorio.slice(1);
-    console.log(name, description, finish, recordatorio)
     if(pet === "POST"){
     //POST
     const res = await fetch(`${API}/tarea/${cookie.get("accessToken")}`, {
@@ -69,8 +67,9 @@ export const Form = () => {
       }),
     });
     const data = await res.json();
-    console.log(data)
-    navigate("/", { replace: true })
+    if(data){
+      navigate("/", { replace: true })
+    }
     }
     else if (pet === "PUT"){
       //PUT
@@ -88,8 +87,9 @@ export const Form = () => {
         }),
       });
       const data = await res.json();
-      console.log(data)
-      navigate("/", { replace: true })
+      if(data){
+        navigate("/", { replace: true })
+      }    
     }
   }
 
@@ -97,7 +97,10 @@ export const Form = () => {
     <Fragment>
       <div className="d-flex">
       <div className="container min-vh-100 d-flex align-items-center flex-column w-50">
-        <h1 className="m-4 pt-4 pb-4 font-weight-bold">Nueva Tarea</h1>
+        {pet === "POST" 
+        ? <h1 className="m-4 pt-4 pb-4 font-weight-bold">Nueva Tarea</h1>
+        : <h1 className="m-4 pt-4 pb-4 font-weight-bold">Actualizar Tarea</h1>
+        }
         <form
           className="rounded w-75 bg-white"
           style={{border:"1px solid #8294C4", color:"#8294C4", fontWeight:"500"}}
@@ -119,7 +122,7 @@ export const Form = () => {
                 value={name}
               />
             </div>
-            <div className="form-group mb-4">
+            <div className="form-group mb-3">
               <label htmlFor="descTarea" className="form-label">
                 Descripcion
               </label>
@@ -134,9 +137,9 @@ export const Form = () => {
               />
             </div>
             <div className="d-flex">
-            <div className="form-group mb-4 d-flex w-100">
-              <label htmlFor="fechaTarea" className="form-label my-auto">
-                Fecha de Inicio
+            <div className="form-group mb-3 d-flex w-100">
+              <label htmlFor="fechaTarea" className="form-label my-auto me-3" style={{width:"30px"}}>
+                Inicio
               </label>
               <input
                 type="datetime-local"
@@ -147,7 +150,7 @@ export const Form = () => {
                 value={start}
               />
             </div>
-            <div className="form-group ms-3 mb-4 d-flex w-50">
+            <div className="form-group ms-3 mb-3 d-flex w-50">
               <label htmlFor="recTarea" className="form-label me-2 my-auto">
                 Alarma
               </label>
@@ -162,8 +165,8 @@ export const Form = () => {
             </div>
             </div>
             <div className="form-group mb-4 d-flex w-100">
-              <label htmlFor="fechaTarea" className="form-label my-auto">
-                Fecha Limite
+              <label htmlFor="fechaTarea" className="form-label my-auto me-3" style={{width:"30px"}}>
+                Final
               </label>
               <input
                 type="datetime-local"

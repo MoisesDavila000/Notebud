@@ -42,9 +42,10 @@ export const Main = () => {
     const res = await fetch(`${API}/logout`);
 
     const data = await res.json();
-    console.log(data);
-    cookie.remove("accessToken");
-    navigate("/login", { replace: true });
+    if(data){
+      cookie.remove("accessToken");
+      navigate("/login", { replace: true });
+    }
   };
 
   const getTareas = async () => {
@@ -54,28 +55,32 @@ export const Main = () => {
     var tarea = [];
     var calendario = [];
     for (var i = 0; i < data.length; i++) {
-      if (data[i].recordatorio === "True") {
-        alarma.push(data[i]);
-      } else {
-        tarea.push(data[i]);
-      }
       var start = data[i].date_start;
       var end = data[i].date_finish;
       calendario.push({title: data[i].name, start: moment(start).toDate(), end: moment(end).toDate(), allDay:false});
-      console.log(calendario);
+      if (data[i].recordatorio === "True") {
+        alarma.push(data[i]);
+        var fechaA = new Date(alarma[alarma.length-1].date_finish.slice(0,10))
+        alarma[alarma.length-1].date_finish = format((fechaA),"d/MM/Y").toString();
+      } else {
+        tarea.push(data[i]);
+        var fechaT = new Date(tarea[tarea.length-1].date_finish.slice(0,10))
+        tarea[tarea.length-1].date_finish = format((fechaT),"d/MM/Y").toString();
+      }
     }
     setAlarmas(alarma);
     setTareas(tarea);
     setTCal(calendario);
-    console.log(data);
-    console.log(tCal);
   };
 
   const getTareasDate = async () => {
     const res = await fetch(`${API}/tareafecha/${cookie.get("accessToken")}`);
     const data = await res.json();
+    for(var i = 0; i < data.length; i++){
+      var fecha = new Date(data[i].date_finish.slice(0,10))
+      data[i].date_finish = format((fecha),"d/MM/Y").toString();
+    }
     setTDates(data);
-    console.log(data);
   };
 
   const editTarea = (id) => {
@@ -114,11 +119,11 @@ export const Main = () => {
         <div className="d-flex align-items-center">
           <h4 className="align-self-center m-0 text-light">Hola, {cookie.get("userName")} |</h4>
           <button
-            className="btn btn- me-4 ps-1"
+            className="btn me-4 ps-1"
             onClick={handleLogOut}
           >
             <h4 className="m-0 text-dark"
-            >Cerrar Sesion</h4>
+            >Cerrar Sesión</h4>
           </button>
         </div>
       </nav>
@@ -126,8 +131,8 @@ export const Main = () => {
         <div className=" mt-3 mx-3">
           {/* Calendario */}
           <div className="d-flex">
-            <div  className="w-50 mt-2" style={{backgroundColor: "rgba(255,255,255,0.9)", color:"#343A40"}}>
-              <Calendar localizer={localizer} startAccessor="start" endAccessor="end" style={{height:"33rem"}}
+            <div className="w-50 m-2">
+              <Calendar localizer={localizer} startAccessor="start" endAccessor="end" style={{height:"35.85rem", padding:"0.5rem", backgroundColor: "rgba(255,255,255,0.9)", color:"#343A40", border:"1px solid rgba(0,0,0,0.25)"}}
               events={tCal}
               toolbar={true}  
               culture="es"
@@ -137,8 +142,11 @@ export const Main = () => {
                 today: "Hoy",
                 month:"Mes",
                 week:"Semana",
-                day:"Dia",
+                day:"Día",
                 agenda:"Agenda",
+                date: "Fecha",
+                time: "Hora",
+                event: "Tarea",
                 showMore: (total) => `+${total} más`,
 
               }}
@@ -154,7 +162,7 @@ export const Main = () => {
                     style={{ maxHeight: "10rem", backgroundColor: "#FFEAD2"}}
                   >
                     <div className="card-header">
-                      <h2 className="m-0">Faltan 3 dias</h2>
+                      <h2 className="m-0">Faltan 3 días</h2>
                     </div>
                     <div style={{ overflowY: "scroll" }}>
                       {tDates.length === 0
@@ -169,7 +177,7 @@ export const Main = () => {
                         
                       </p>
                     </div>
-                    <hr className="my-0" />
+                    <hr className="my-0 mx-2" />
                     </div>
                     : tDates.map((tDates) => (
                       <div key={tDates._id}>
@@ -183,7 +191,7 @@ export const Main = () => {
                           {tDates.date_finish}
                         </p>
                       </div>
-                      <hr className="my-0" />
+                      <hr className="my-0 mx-2" />
                       </div>
                     )) }
                     </div>
@@ -192,7 +200,7 @@ export const Main = () => {
                 {/* Listas */}
                 <div className="d-flex mt-1">
                   <div
-                    className="card text-dark m-2 mb-0 w-50"
+                    className="card text-dark m-2 w-50"
                     style={{ maxHeight: "25rem", maxWidth: "22rem", backgroundColor: "#DBDFEA"}}
                   >
                     <div className="card-header d-flex">
@@ -217,7 +225,7 @@ export const Main = () => {
                         
                       </p>
                     </div>
-                    <hr className="my-0" />
+                    <hr className="my-0 mx-2" />
                     </div>
                     : tareas.map((tareas) => (
                       <div key={tareas._id}>
@@ -246,7 +254,7 @@ export const Main = () => {
                             </button>
                           </div>
                         </div>
-                        <hr className="my-0" />
+                        <hr className="my-0 mx-2" />
                       </div>
                     ))}
                     </div>
@@ -277,7 +285,7 @@ export const Main = () => {
                         
                       </p>
                     </div>
-                    <hr className="my-0" />
+                    <hr className="my-0 mx-2" />
                     </div>
                     : alarmas.map((alarmas) => (
                       <div key={alarmas._id}>
@@ -307,7 +315,7 @@ export const Main = () => {
                             </button>
                           </div>
                         </div>
-                        <hr className="my-0" />
+                        <hr className="my-0 mx-2" />
                       </div>
                     ))}
                     </div>
@@ -420,7 +428,3 @@ export const Main = () => {
     </Fragment>
   );
 };
-
-
-
-//export default Main

@@ -32,7 +32,6 @@ export const LogIn = () => {
     const data = await res.json();
     var count = Object.keys(data).length;
     if (count === 2) {
-      console.log(data.accessToken);
       const accessToken = data.accessToken;
       const userName = data.userName;
       cookie.set("accessToken", accessToken, { path: "/" });
@@ -140,7 +139,6 @@ export const Register = () => {
     const data = await res.json();
     var count = Object.keys(data).length;
     if (count === 2) {
-      console.log(data.accessToken);
       const accessToken = data.accessToken;
       const userName = data.userName;
       cookie.set("accessToken", accessToken, { path: "/" });
@@ -232,5 +230,3 @@ export const Register = () => {
     </Fragment>
   );
 };
-
-//export default LogIn
