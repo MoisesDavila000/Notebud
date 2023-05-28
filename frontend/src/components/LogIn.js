@@ -130,14 +130,15 @@ export const Register = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name,
-        email,
-        password,
+        "name": name,
+        "email": email,
+        "password": password,
       }),
     });
 
     const data = await res.json();
     var count = Object.keys(data).length;
+    console.log(count);
     if (count === 2) {
       const accessToken = data.accessToken;
       const userName = data.userName;

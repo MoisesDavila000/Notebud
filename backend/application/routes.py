@@ -99,11 +99,13 @@ def register():
         #Si no existe, se hace hash a la contraseña
     hashed_password = bcrypt.generate_password_hash(request.json["password"])
         #Se almacena los datos del nuevo usuario en la base de datos
-    registeruser_json = db.users_data.insert_one({
+    db.users_data.insert_one({
         "name": request.json["name"],
         "email": request.json["email"],
         "password": hashed_password
     })
+    registeruser_json = db.users_data.find_one({"email": request.json["email"]})
+    
         #Se muestra un flash de success y se redirige a login
     return jsonify({"accessToken": str(registeruser_json["_id"]), "userName": registeruser_json["name"]})
 

@@ -28,7 +28,9 @@ const localizer = dateFnsLocalizer({
   locales
 });
 
-
+const formatDate = (date_finish) => {
+  return new Date(date_finish).toLocaleDateString("es-MX");
+}
 
 export const Main = () => {
   const cookie = new Cookies();
@@ -44,6 +46,7 @@ export const Main = () => {
     const data = await res.json();
     if(data){
       cookie.remove("accessToken");
+      cookie.remove("userName");
       navigate("/login", { replace: true });
     }
   };
@@ -60,12 +63,11 @@ export const Main = () => {
       calendario.push({title: data[i].name, start: moment(start).toDate(), end: moment(end).toDate(), allDay:false});
       if (data[i].recordatorio === "True") {
         alarma.push(data[i]);
-        var fechaA = new Date(alarma[alarma.length-1].date_finish.slice(0,10))
-        alarma[alarma.length-1].date_finish = format((fechaA),"d/MM/Y").toString();
+        alarma[alarma.length-1].date_finish = formatDate(alarma[alarma.length-1].date_finish)
       } else {
         tarea.push(data[i]);
-        var fechaT = new Date(tarea[tarea.length-1].date_finish.slice(0,10))
-        tarea[tarea.length-1].date_finish = format((fechaT),"d/MM/Y").toString();
+        tarea[tarea.length-1].date_finish = formatDate(tarea[tarea.length-1].date_finish)
+        
       }
     }
     setAlarmas(alarma);
@@ -77,8 +79,7 @@ export const Main = () => {
     const res = await fetch(`${API}/tareafecha/${cookie.get("accessToken")}`);
     const data = await res.json();
     for(var i = 0; i < data.length; i++){
-      var fecha = new Date(data[i].date_finish.slice(0,10))
-      data[i].date_finish = format((fecha),"d/MM/Y").toString();
+      data[i].date_finish = formatDate(data[i].date_finish);
     }
     setTDates(data);
   };
