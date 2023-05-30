@@ -95,13 +95,14 @@ def get_tarea(tarea_id):
 @jwt_required()
 def add_tarea():
     user_id = get_jwt_identity()
+    print(user_id)
     db.tarea_flask.insert_one({
         "name": request.json['name'],
         "description": request.json['description'],
         "recordatorio": request.json['recordatorio'],
         "date_start": request.json['date_start'],
         "date_finish": request.json['date_finish'],
-        "user_id": ObjectId(user_id)
+        "user_id": ObjectId(str(user_id))
     })
 
     return jsonify({"msg": "Tarea creada."})
@@ -110,17 +111,20 @@ def add_tarea():
 @app.route("/tarea/<tarea_id>", methods=["PUT"])
 @jwt_required()
 def update_tarea(tarea_id):
-    user_id = get_jwt_identity
-    task = db.tarea_flask.find_one({"_id": ObjectId(tarea_id)})
-    if(str(task["_id"] != id)):
+    user_id = get_jwt_identity()
+    task = db.tarea_flask.find_one({"_id": ObjectId(str(tarea_id))})
+    task_id = str(task["user_id"])
+    print(task_id, user_id)
+    print(task_id == user_id)
+    if(task_id != user_id):
         return jsonify({"msg": "No puedes modificar esta tarea"}), 401
-    db.tarea_flask.find_one_and_update({"_id": ObjectId(tarea_id)}, {"$set": {
+    db.tarea_flask.find_one_and_update({"_id": ObjectId(str(tarea_id))}, {"$set": {
         "name": request.json['name'],
         "description": request.json['description'],
         "recordatorio": request.json['recordatorio'],
         "date_start": request.json['date_start'],
         "date_finish": request.json['date_finish'],
-        "user_id": ObjectId(str(id))
+        "user_id": ObjectId(str(user_id))
 
     }})
     return jsonify({"msg": "Tarea Actualizada"})
@@ -147,9 +151,9 @@ def login():
     users = db.users_data
     # Se busca en la BD si existe un usuario con el email ingresado
     loginuser_json = users.find_one({"email": request.json["email"]})
-    id = str(loginuser_json["_id"])
 
     if loginuser_json:
+        id = str(loginuser_json["_id"])
         # Si existe el email despues se compara la contraseña con la almacenada en la base de datos
         if bcrypt.check_password_hash(loginuser_json["password"], request.json["password"]):
             # Si las contraseñas son iguales se almacena el usuario para que este loggeado
@@ -181,8 +185,10 @@ def register():
     registeruser_json = db.users_data.find_one(
         {"email": request.json["email"]})
 
+    user_id = ObjectId(str(registeruser_json["_id"]))
+
     # Se muestra un flash de success y se redirige a login
-    access_token = create_access_token(identity=registeruser_json["email"])
+    access_token = create_access_token(identity=user_id)
     response = jsonify({"userName": registeruser_json["name"], "accessToken": access_token})
     return response, 201
 

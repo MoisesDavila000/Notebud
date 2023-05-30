@@ -18,8 +18,7 @@ export const Form = () => {
   const [check, setCheck] = useState(false);
 
   const [update_id, setID] = useState("");
-  const [pet, setPet] = useState("POST")
-
+  const [pet, setPet] = useState("POST");
 
   const updateForm = async () =>{
     //Peticion para llenar formulario con datos del objeto a modificar
