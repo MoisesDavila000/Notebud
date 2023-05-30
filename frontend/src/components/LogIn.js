@@ -32,10 +32,14 @@ export const LogIn = () => {
     const data = await res.json();
     var count = Object.keys(data).length;
     if (count === 2) {
-      const accessToken = data.accessToken;
-      const userName = data.userName;
+      // const accessToken = data.accessToken;
+      // const userName = data.userName;
+
+      const {accessToken, userName} = data
+
       cookie.set("accessToken", accessToken, { path: "/" });
       cookie.set("userName", userName, { path: "/" });
+
       setEmail("");
       setPassword("");
       navigate(from, { replace: true });
@@ -140,8 +144,12 @@ export const Register = () => {
     var count = Object.keys(data).length;
     console.log(count);
     if (count === 2) {
-      const accessToken = data.accessToken;
-      const userName = data.userName;
+
+      // const accessToken = data.accessToken;
+      // const userName = data.userName;
+      
+      const { accessToken, userName} = data
+
       cookie.set("accessToken", accessToken, { path: "/" });
       cookie.set("userName", userName, { path: "/" });
       setEmail("");

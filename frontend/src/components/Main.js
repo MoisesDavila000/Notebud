@@ -41,7 +41,12 @@ export const Main = () => {
   const [tCal, setTCal] = useState([]);
 
   const handleLogOut = async () => {
-    const res = await fetch(`${API}/logout`);
+    const res = await fetch(`${API}/logout`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${cookie.get("accessToken")}`
+      },
+    });
 
     const data = await res.json();
     if(data){
@@ -52,8 +57,18 @@ export const Main = () => {
   };
 
   const getTareas = async () => {
-    const res = await fetch(`${API}/tareas/${cookie.get("accessToken")}`);
+    const res = await fetch(`${API}/tareas`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${cookie.get("accessToken")}`
+      },
+    });
+
     const data = await res.json();
+
+    console.log(data)
+
     var alarma = [];
     var tarea = [];
     var calendario = [];
@@ -76,8 +91,18 @@ export const Main = () => {
   };
 
   const getTareasDate = async () => {
-    const res = await fetch(`${API}/tareafecha/${cookie.get("accessToken")}`);
+    const res = await fetch(`${API}/fechatarea`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${cookie.get("accessToken")}`
+      },
+    })
+
     const data = await res.json();
+
+    console.log(data)
+
+
     for(var i = 0; i < data.length; i++){
       data[i].date_finish = formatDate(data[i].date_finish);
     }
@@ -94,8 +119,11 @@ export const Main = () => {
       "¿Estas seguro que quieres eliminar esta tarea?"
     );
     if (userResponse) {
-      const res = await fetch(`${API}/tarea/${id}`, {
+      const res = await fetch(`${API}/delete_tarea/${id}`, {
         method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${cookie.get("accessToken")}`
+        }
       });
       const data = await res.json();
       console.log(data);

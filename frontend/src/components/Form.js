@@ -23,7 +23,13 @@ export const Form = () => {
 
   const updateForm = async () =>{
     //Peticion para llenar formulario con datos del objeto a modificar
-    const res = await fetch(`${API}/tarea/${update_id}`);
+    const res = await fetch(`${API}/tarea/${update_id}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${cookie.get("accessToken")}`
+      },
+    });
+
     const data = await res.json();
     
     if(data){
@@ -53,10 +59,11 @@ export const Form = () => {
     recordatorio = recordatorio.charAt(0).toUpperCase() + recordatorio.slice(1);
     if(pet === "POST"){
     //POST
-    const res = await fetch(`${API}/tarea/${cookie.get("accessToken")}`, {
+    const res = await fetch(`${API}/tarea`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${cookie.get("accessToken")}`
       },
       body: JSON.stringify({
         "name": name,
@@ -73,10 +80,11 @@ export const Form = () => {
     }
     else if (pet === "PUT"){
       //PUT
-      const res = await fetch(`${API}/tarea/${cookie.get("accessToken")}/${update_id}`, {
+      const res = await fetch(`${API}/tarea/${update_id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${cookie.get("accessToken")}`
         },
         body: JSON.stringify({
           "name": name,
