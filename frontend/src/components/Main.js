@@ -100,9 +100,6 @@ export const Main = () => {
 
     const data = await res.json();
 
-    console.log(data)
-
-
     for(var i = 0; i < data.length; i++){
       data[i].date_finish = formatDate(data[i].date_finish);
     }
@@ -126,7 +123,6 @@ export const Main = () => {
         }
       });
       const data = await res.json();
-      console.log(data);
       await getTareas();
       await getTareasDate();
     }
@@ -161,7 +157,7 @@ export const Main = () => {
           {/* Calendario */}
           <div className="d-flex">
             <div className="w-50 m-2">
-              <Calendar localizer={localizer} startAccessor="start" endAccessor="end" style={{height:"35.85rem", padding:"0.5rem", backgroundColor: "rgba(255,255,255,0.9)", color:"#343A40", border:"1px solid rgba(0,0,0,0.25)"}}
+              <Calendar localizer={localizer} startAccessor="start" endAccessor="end" style={{height:"36rem", padding:"0.5rem", backgroundColor: "rgba(255,255,255,0.9)", color:"#343A40", border:"1px solid rgba(0,0,0,0.25)"}}
               events={tCal}
               toolbar={true}  
               culture="es"
@@ -182,7 +178,7 @@ export const Main = () => {
               />
             </div>
             
-            <div style={{ width: "45rem", marginLeft: "auto" }}>
+            <div className="w-50">
               {/* Alerta de 3 dias */}
               <div>
                 <div className="d-flex h-25">
@@ -191,7 +187,7 @@ export const Main = () => {
                     style={{ maxHeight: "10rem", backgroundColor: "#FFEAD2"}}
                   >
                     <div className="card-header">
-                      <h2 className="m-0">Faltan 3 días</h2>
+                      <h2 className="m-0">Faltan 3 días o menos...</h2>
                     </div>
                     <div style={{ overflowY: "scroll" }}>
                       {tDates.length === 0
@@ -230,7 +226,7 @@ export const Main = () => {
                 <div className="d-flex mt-1">
                   <div
                     className="card text-dark m-2 w-50"
-                    style={{ maxHeight: "25rem", maxWidth: "22rem", backgroundColor: "#DBDFEA"}}
+                    style={{ maxHeight: "25rem", backgroundColor: "#DBDFEA"}}
                   >
                     <div className="card-header d-flex">
                       <h3 className="m-0">Tareas</h3>

@@ -2,7 +2,8 @@ from email.message import EmailMessage
 import os
 import ssl 
 import smtplib
-from datetime import datetime, date
+from datetime import datetime, date, timezone
+from pytz import timezone
 
 # Funcion para enviar correos 
 def _emailSender(db):
@@ -14,9 +15,8 @@ def _emailSender(db):
         # Obtener el usuario a partir del user_id de la tarea 
         user = db.users_data.find_one({"_id": tarea["user_id"]})
         fechaT = datetime.strptime(tarea["date_finish"], "%Y-%m-%dT%H:%M").date()
-        hoy = date.today()
-        delta = fechaT - hoy
-        if(delta.days == 0):
+        hoy = datetime.now(timezone('America/Monterrey')).date()
+        if(fechaT == hoy):
             # Almacenar correo del usuario
             email_reciever = user["email"]
             # Llenado del correo
@@ -30,7 +30,7 @@ def _emailSender(db):
                 <h2>Hola """ + user["name"] + """.</h2>
                 <h2>Tu tarea vence hoy, no olvides acabarla.</h2>
                 <p> """ + tarea["description"] + """ </p>
-                <a href="http://localhost:3000">Ver mis tareas </a> 
+                <a href="https://notebud.azurewebsites.net">Ver mis tareas </a> 
                 </body>
                 </html>
                 """

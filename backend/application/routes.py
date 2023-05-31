@@ -6,6 +6,7 @@ from application import db
 from bson import ObjectId
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, unset_jwt_cookies, get_jwt
+import pytz
 
 # Inicializar Bcrypt
 bcrypt = Bcrypt(app)
@@ -65,8 +66,9 @@ def get_fechas():
     for tarea in db.tarea_flask.find({"user_id": ObjectId(str(id))}).sort("date_finish", -1):
         fechaT = datetime.strptime(
             tarea["date_finish"], "%Y-%m-%dT%H:%M").date()
-        hoy = date.today()
-        delta = fechaT - hoy
+        hoy = datetime.now(pytz.timezone('America/Monterrey'))
+        delta = fechaT - hoy.date()
+        print(delta.days)
         if (delta.days <= 3 and delta.days >= 0):
             tarea["_id"] = str(tarea["_id"])
             tarea["user_id"] = str(tarea["user_id"])
