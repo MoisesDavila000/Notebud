@@ -39,7 +39,7 @@ def bgfunc():
     # Ejecutar el trabajo _emailSender todos los dias a cierta hora
     # Nota: Tener Debug=True en run.py hara que este se ejecute 2 veces
     schedule.every().day.at("00:00:00", timezone('America/Monterrey')).do(_emailSender, db)
-    schedule.every().day.at("21:41:40", timezone('America/Monterrey')).do(_emailSender, db)
+    schedule.every().day.at("19:00:00", timezone('America/Monterrey')).do(_emailSender, db)
 
     while 1:
         schedule.run_pending()
